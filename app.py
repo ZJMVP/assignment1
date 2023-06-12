@@ -4,6 +4,8 @@ import sqlite3
 
 app = Flask(__name__)
 
+image_names = ['chuck.jpg','dar.jpg','dave.jpg','dhru.jpg','drsl.jpg','tavo.jpg','upset.jpg']
+
 @app.route('/')
 def index():
    return render_template('index.html')
@@ -22,19 +24,19 @@ def remove():
 
 @app.route('/find')
 def find():
-   return render_template('find.html')
+   return render_template('find_person.html')
 
 @app.route('/put_pic')
 def put_pic():
-   return render_template('put_pic.html')
+   return render_template('show_pics.html')
 
 @app.route('/updatekey')
 def updatekey():
    return render_template('updatekey.html')
 
-@app.route('/add_pic')
+@app.route('/upload_pic')
 def addpic():
-   return render_template('add_pic.html')
+   return render_template('upload_pic.html')
 
 @app.route('/all', methods=['POST','GET'])
 def full_list():
@@ -85,6 +87,8 @@ def addpicture():
         currsor = connection.cursor()
         name= str(request.form['name1'])
         pic= str(request.form['pic1'])
+		if (pic not in image_names):
+			return "alert(please choose pictures which are in assign1)"
         querry="UPDATE people SET Picture = '"+pic+"'   WHERE Name ='"+name+"' "
         currsor.execute(querry)
         connection.commit()
@@ -106,7 +110,7 @@ def notmatch():
         cursor.execute(querry)
         rows = cursor.fetchall()
         connection.close()
-    return render_template("put_pic.html",rows = rows)
+    return render_template("show_pics.html",rows = rows)
 
 @app.route('/remove_person', methods=['GET', 'POST'])
 def deleterecord():
@@ -132,7 +136,7 @@ def list():
     cursor.execute(querry)
     rows = cursor.fetchall()
     connection.close()
-    return render_template("put_pic.html",rows = rows)
+    return render_template("show_pics.html",rows = rows)
 
 if __name__ =="__main__":
     app.run(debug=True)
